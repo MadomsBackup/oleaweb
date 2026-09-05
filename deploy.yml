@@ -1,5 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy a GitHub Pages
 
+# Corre en cada push a main: compila el proyecto y publica dist/ en
+# GitHub Pages. Así el sitio deployado siempre sale de un build fresco
+# (nunca de archivos sueltos copiados a mano, que es lo que causaba el
+# 404 cruzado entre index.html y los assets).
 on:
   push:
     branches: [main]
@@ -21,19 +25,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Instalar Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Instalar dependencias
         run: npm ci
 
       - name: Build
         run: npm run build
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
 
-      - name: Upload artifact
+      - name: Preparar artifact de Pages
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -45,6 +51,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy a GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
