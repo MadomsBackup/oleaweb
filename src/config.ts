@@ -4,4 +4,4 @@
  * en olea-backend, expuesto en /api). Se puede sobreescribir con la
  * variable de entorno VITE_API_BASE_URL (ej. en un .env para producción).
  */
-export const API_BASE_URL = 'http://localhost:3000/api';
+export const API_BASE_URL = 'https://oleabackend.onrender.com';
