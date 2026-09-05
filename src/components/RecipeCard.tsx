@@ -9,6 +9,12 @@ interface Props {
   onPress: () => void;
 }
 
+/**
+ * En mobile es una fila (imagen chica a la izquierda, texto a la
+ * derecha) — igual que la app nativa. Desde `md:` (laptop/desktop, con
+ * el sidebar visible) pasa a ser una tarjeta vertical con la imagen
+ * arriba, pensada para vivir en una grilla de varias columnas.
+ */
 export default function RecipeCard({ recipe, onPress }: Props) {
   const upsertLocal = useRecipesStore((s) => s.upsertLocal);
 
@@ -28,9 +34,9 @@ export default function RecipeCard({ recipe, onPress }: Props) {
     <button
       type="button"
       onClick={onPress}
-      className="w-full flex bg-white dark:bg-oliva-900 rounded-[20px] overflow-hidden mb-3.5 shadow-sm border border-subtle dark:border-subtle-dark text-left hover:shadow-md transition-shadow"
+      className="w-full h-full flex md:flex-col bg-white dark:bg-oliva-900 rounded-[20px] md:rounded-2xl overflow-hidden shadow-sm border border-subtle dark:border-subtle-dark text-left hover:shadow-md transition-shadow"
     >
-      <div className="w-[92px] h-[92px] shrink-0 flex items-center justify-center bg-rose/40 overflow-hidden">
+      <div className="w-[92px] h-[92px] md:w-full md:h-40 lg:h-44 shrink-0 flex items-center justify-center bg-rose/40 overflow-hidden">
         {cover ? (
           <img
             src={`data:image/${cover.extension};base64,${cover.base64Data}`}
@@ -38,12 +44,12 @@ export default function RecipeCard({ recipe, onPress }: Props) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <Icon name="restaurant" size={28} className="text-terracota" />
+          <Icon name="restaurant" size={28} className="md:text-[36px] text-terracota" />
         )}
       </div>
-      <div className="flex-1 px-3.5 py-3 min-w-0">
+      <div className="flex-1 px-3.5 py-3 md:p-4 min-w-0 flex flex-col">
         <div className="flex justify-between items-start">
-          <p className="flex-1 font-serif-bold text-[15px] text-oliva dark:text-cream line-clamp-2 pr-2">
+          <p className="flex-1 font-serif-bold text-[15px] md:text-[16px] text-oliva dark:text-cream line-clamp-2 pr-2">
             {recipe.name}
           </p>
           <button type="button" onClick={toggleFavorite} className="shrink-0 p-1 -m-1 hover:opacity-70">
@@ -66,7 +72,7 @@ export default function RecipeCard({ recipe, onPress }: Props) {
           </span>
         </div>
         {recipe.category ? (
-          <p className="text-[9.5px] font-sans-bold text-oliva/70 dark:text-cream/70 uppercase mt-2 tracking-wide">
+          <p className="text-[9.5px] font-sans-bold text-oliva/70 dark:text-cream/70 uppercase mt-2 tracking-wide md:mt-auto md:pt-2">
             {recipe.category.name}
           </p>
         ) : null}

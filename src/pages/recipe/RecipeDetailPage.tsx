@@ -5,6 +5,7 @@ import IconButton from '../../components/IconButton';
 import PrimaryButton from '../../components/PrimaryButton';
 import Icon from '../../components/Icon';
 import Modal from '../../components/Modal';
+import PhotoCarousel from '../../components/PhotoCarousel';
 import { recipesApi } from '../../api/recipes';
 import { useRecipesStore } from '../../store/recipesStore';
 import { useAuthStore } from '../../store/authStore';
@@ -23,7 +24,6 @@ export default function RecipeDetailPage() {
   const [recipe, setRecipe] = useState<Recipe | undefined>(cached);
   const [servings, setServings] = useState(cached?.servings ?? 4);
   const [exporting, setExporting] = useState(false);
-  const [activePhoto, setActivePhoto] = useState(0);
 
   const [disableModalOpen, setDisableModalOpen] = useState(false);
   const [disabling, setDisabling] = useState(false);
@@ -131,33 +131,8 @@ export default function RecipeDetailPage() {
       </div>
 
       <div className="px-5 md:px-8 max-w-3xl mx-auto">
-        {/* Imagen contenida — ya no estirada a todo el ancho/alto de la ventana */}
-        <div className="relative w-full max-w-xl mx-auto aspect-[4/3] sm:aspect-video rounded-3xl overflow-hidden bg-rose/40 border border-subtle dark:border-subtle-dark shadow-sm">
-          {recipe.photos?.length ? (
-            <img
-              src={`data:image/${recipe.photos[activePhoto].extension};base64,${recipe.photos[activePhoto].base64Data}`}
-              alt={recipe.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Icon name="restaurant" size={44} className="text-terracota" />
-            </div>
-          )}
-          {recipe.photos?.length > 1 ? (
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
-              {recipe.photos.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActivePhoto(idx)}
-                  aria-label={`Foto ${idx + 1}`}
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ backgroundColor: idx === activePhoto ? '#C17C53' : 'rgba(255,255,255,0.75)' }}
-                />
-              ))}
-            </div>
-          ) : null}
-        </div>
+        {/* Imagen contenida, con swipe/drag para pasar de foto (además de los puntos y flechas) */}
+        <PhotoCarousel photos={recipe.photos ?? []} altBase={recipe.name} />
 
         <div className="pt-5">
           {recipe.category ? (
@@ -233,7 +208,7 @@ export default function RecipeDetailPage() {
 
             {isOwner ? (
               <IconButton
-                icon="visibility_off"
+                icon="delete_outline"
                 variant="circle"
                 tone="danger"
                 label="Deshabilitar receta"
@@ -342,7 +317,7 @@ export default function RecipeDetailPage() {
             <PrimaryButton
               label="Deshabilitar"
               variant="danger"
-              icon="visibility_off"
+              icon="delete_outline"
               loading={disabling}
               onClick={handleDisable}
             />

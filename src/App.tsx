@@ -66,20 +66,23 @@ export default function App() {
             <Route path="/buscar" element={<SearchPage />} />
             <Route path="/favoritos" element={<FavoritesPage />} />
             <Route path="/perfil" element={<ProfilePage />} />
+
+            <Route path="/recetas/nueva" element={<RecipeFormPage />} />
+            <Route path="/recetas/:recipeId" element={<RecipeDetailPage />} />
+            <Route path="/recetas/:recipeId/editar" element={<RecipeFormPage />} />
+
+            <Route element={<AdminRoute />}>
+              <Route path="/admin" element={<AdminHomePage />} />
+              <Route path="/admin/categorias" element={<AdminCategoriesPage />} />
+              <Route path="/admin/ingredientes" element={<AdminIngredientsPage />} />
+              <Route path="/admin/medidas" element={<AdminMeasuresPage />} />
+              <Route path="/admin/alergenos" element={<AdminAllergensPage />} />
+            </Route>
           </Route>
 
-          <Route path="/recetas/nueva" element={<RecipeFormPage />} />
-          <Route path="/recetas/:recipeId" element={<RecipeDetailPage />} />
-          <Route path="/recetas/:recipeId/editar" element={<RecipeFormPage />} />
+          {/* Modo cocina queda fuera del layout a propósito: es pantalla
+              completa, sin menú, para no distraer mientras se cocina. */}
           <Route path="/recetas/:recipeId/cocinar" element={<CookModePage />} />
-
-          <Route element={<AdminRoute />}>
-            <Route path="/admin" element={<AdminHomePage />} />
-            <Route path="/admin/categorias" element={<AdminCategoriesPage />} />
-            <Route path="/admin/ingredientes" element={<AdminIngredientsPage />} />
-            <Route path="/admin/medidas" element={<AdminMeasuresPage />} />
-            <Route path="/admin/alergenos" element={<AdminAllergensPage />} />
-          </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>OLEA</title>
+    <script type="text/javascript">
+      // GitHub Pages es hosting estático: no sabe que "/recetas/123" es
+      // una ruta de React Router, así que al recargar o entrar directo
+      // por esa URL devuelve este 404.html. Acá redirigimos a index.html
+      // codificando la ruta original en la query string; index.html la
+      // decodifica antes de montar React (ver script al inicio de <head>
+      // en index.html). Técnica estándar: https://github.com/rafgraph/spa-github-pages
+      var pathSegmentsToKeep = 0; // 0 porque este es un "user/organization site" (madomsbackup.github.io), sin subcarpeta de repo que conservar
+
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname
+            .split('/')
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join('/') +
+          '/?/' +
+          l.pathname
+            .slice(1)
+            .split('/')
+            .slice(pathSegmentsToKeep)
+            .join('/')
+            .replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>

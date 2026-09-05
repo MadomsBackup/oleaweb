@@ -34,7 +34,7 @@ ajustá `VITE_API_BASE_URL`.
 ## Scripts
 
 - `npm run dev` — servidor de desarrollo con hot reload
-- `npm run build` — build de producción (`tsc -b && vite build`) en `dist/`
+- `npm run build` — build de producción (`tsc && vite build`) en `dist/`
 - `npm run preview` — sirve el build de producción localmente
 - `npm run lint` — solo chequea tipos (`tsc --noEmit`)
 
@@ -74,9 +74,39 @@ src/
   una receta compartida sin necesidad de iniciar sesión (usa el endpoint
   `GET /public/recipes/:token` que ya expone el backend).
 
+## Deploy a GitHub Pages
+
+Este proyecto ya viene preparado para GitHub Pages (`public/404.html` +
+script en `index.html`), que arregla el error clásico de "404 al
+recargar" en cualquier ruta que no sea la raíz (`/recetas/123`,
+`/buscar`, `/compartida/:token`, etc.) — GitHub Pages es hosting
+estático y no sabe que esas son rutas de React Router, así que hay que
+redirigirlo con ese truco.
+
+```bash
+npm run build
+```
+
+Subí el contenido de `dist/` a la rama que sirve GitHub Pages (por
+ejemplo `gh-pages`, o `main` si tu repo se llama `usuario.github.io`).
+No olvides que **el backend también tiene que ser accesible desde
+internet** (no `localhost`) para que la web deployada pueda hablar con
+él — actualizá `VITE_API_BASE_URL` en un `.env` antes de buildear, o
+usá una variable de entorno en tu pipeline de CI.
+
+## Notas de accesibilidad y UX
+
+- La paleta fue ajustada para tener mejor contraste (ver comentarios en
+  `src/theme/colors.ts`).
+- Los íconos son [Google Material Symbols](https://fonts.google.com/icons),
+  cargados desde Google Fonts.
+- El temporizador de cada paso usa un selector de minutos/segundos
+  (`DurationPicker.tsx`) para evitar confundir minutos con segundos.
+
 ## Notas de diseño
 
-La paleta y tipografías están definidas en `tailwind.config.js` con los
+La paleta y tipografías están definidas en `tailwind.config.ts` (que a su
+vez importa `src/theme/colors.ts`, la única fuente de verdad) con los
 mismos nombres que `mobile/src/theme/colors.ts` (`cream`, `oliva`,
 `oliva-dark`, `terracota`, `salvia`, `rose`, `bege`), así que cualquier
 clase de la app mobile (`bg-terracota`, `text-oliva`, `font-serif-bold`…)

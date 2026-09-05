@@ -1,19 +1,27 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TextField from '../components/TextField';
+import SelectField from '../components/SelectField';
 import RecipeCard from '../components/RecipeCard';
 import EmptyState from '../components/EmptyState';
 import PrimaryButton from '../components/PrimaryButton';
 import { recipesApi } from '../api/recipes';
-import { Recipe } from '../types';
+import { categoriesApi } from '../api/catalog';
+import { Category, Recipe } from '../types';
 
 export default function SearchPage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [ingredient, setIngredient] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const [maxPrepTimeMinutes, setMaxPrepTimeMinutes] = useState('');
+  const [categories, setCategories] = useState<Category[]>([]);
   const [results, setResults] = useState<Recipe[] | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    categoriesApi.listEnabled().then(({ data }) => setCategories(data)).catch(() => {});
+  }, []);
 
   const search = useCallback(async () => {
     setLoading(true);
@@ -21,6 +29,7 @@ export default function SearchPage() {
       const { data } = await recipesApi.search({
         query: query || undefined,
         ingredient: ingredient || undefined,
+        categoryId: categoryId || undefined,
         maxPrepTimeMinutes: maxPrepTimeMinutes ? Number(maxPrepTimeMinutes) : undefined,
       });
       setResults(data);
@@ -29,7 +38,7 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  }, [query, ingredient, maxPrepTimeMinutes]);
+  }, [query, ingredient, categoryId, maxPrepTimeMinutes]);
 
   return (
     <div className="min-h-screen">
@@ -43,6 +52,12 @@ export default function SearchPage() {
         >
           <TextField placeholder="Nombre de la receta" value={query} onChangeText={setQuery} />
           <TextField placeholder="Ingrediente" value={ingredient} onChangeText={setIngredient} />
+          <SelectField
+            placeholder="Todas las categorías"
+            value={categoryId}
+            onChangeValue={setCategoryId}
+            options={categories.map((c) => ({ value: c.id, label: c.name }))}
+          />
           <TextField
             placeholder="Tiempo máx. de preparación (min)"
             type="text"
@@ -50,7 +65,7 @@ export default function SearchPage() {
             value={maxPrepTimeMinutes}
             onChangeText={setMaxPrepTimeMinutes}
           />
-          <PrimaryButton label="Buscar" loading={loading} type="submit" />
+          <PrimaryButton label="Buscar" icon="search" loading={loading} type="submit" />
         </form>
       </div>
 

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Icon from './Icon';
+import DurationPicker from './DurationPicker';
 import { wrapSelection } from '../utils/richText';
 
 export interface StepRowValue {
@@ -108,15 +109,10 @@ export default function StepFormRow({
       />
       {error ? <p className="text-red-600 text-[10.5px] font-sans-medium mt-1">{error}</p> : null}
 
-      <div className="mt-2 flex items-center gap-2 bg-cream dark:bg-oliva-dark rounded-xl px-3 border border-subtle dark:border-subtle-dark">
-        <Icon name="timer" size={16} className="text-muted" />
-        <input
-          placeholder="Temporizador en segundos (opcional)"
-          type="text"
-          inputMode="numeric"
-          value={value.timerSeconds}
-          onChange={(e) => onChange({ ...value, timerSeconds: e.target.value })}
-          className="flex-1 bg-transparent py-2 text-[12px] text-oliva dark:text-cream font-sans outline-none placeholder:text-muted"
+      <div className="mt-3">
+        <DurationPicker
+          totalSeconds={value.timerSeconds}
+          onChange={(timerSeconds) => onChange({ ...value, timerSeconds })}
         />
       </div>
     </div>

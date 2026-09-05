@@ -32,8 +32,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen relative">
-      <div className="px-5 pt-6 max-w-3xl mx-auto">
-        <TextField placeholder="Buscar receta o ingrediente…" value={query} onChangeText={setQuery} />
+      <div className="px-5 md:px-6 lg:px-8 pt-6 max-w-screen-2xl mx-auto">
+        <div className="md:max-w-md">
+          <TextField placeholder="Buscar receta o ingrediente…" value={query} onChangeText={setQuery} />
+        </div>
 
         <div className="flex overflow-x-auto mb-3 -mt-1 pb-1">
           <Chip label="Todas" active={activeCategory === null} onPress={() => setActiveCategory(null)} />
@@ -48,7 +50,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="px-5 pb-24 md:pb-10 max-w-3xl mx-auto">
+      <div className="px-5 md:px-6 lg:px-8 pb-24 md:pb-10 max-w-screen-2xl mx-auto">
         {filtered.length === 0 ? (
           <EmptyState
             icon="restaurant"
@@ -56,9 +58,11 @@ export default function HomePage() {
             subtitle="Tocá el botón de agregar para crear tu primera receta"
           />
         ) : (
-          filtered.map((item) => (
-            <RecipeCard key={item.id} recipe={item} onPress={() => navigate(`/recetas/${item.id}`)} />
-          ))
+          <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-4">
+            {filtered.map((item) => (
+              <RecipeCard key={item.id} recipe={item} onPress={() => navigate(`/recetas/${item.id}`)} />
+            ))}
+          </div>
         )}
       </div>
 
