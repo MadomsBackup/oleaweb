@@ -46,7 +46,10 @@ export default function App() {
   if (!isHydrated) return null;
 
   return (
-    <BrowserRouter>
+    // basename = import.meta.env.BASE_URL toma automáticamente el mismo
+    // valor que "base" en vite.config.ts (/oleaweb/), así el router y el
+    // build quedan sincronizados sin repetir la ruta a mano en dos lugares.
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         {/* Vista pública de receta compartida — no requiere sesión */}
         <Route path="/compartida/:token" element={<PublicRecipePage />} />

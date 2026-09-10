@@ -10,7 +10,11 @@
       // codificando la ruta original en la query string; index.html la
       // decodifica antes de montar React (ver script al inicio de <head>
       // en index.html). Técnica estándar: https://github.com/rafgraph/spa-github-pages
-      var pathSegmentsToKeep = 0; // 0 porque este es un "user/organization site" (madomsbackup.github.io), sin subcarpeta de repo que conservar
+      // El sitio vive en /oleaweb/ (repo de proyecto), no en la raíz del
+      // dominio, así que hay que conservar ese primer segmento de la ruta.
+      // Si el repo cambia de nombre, actualizar este número (y "base" en
+      // vite.config.ts) según cuántos segmentos tenga la nueva ruta.
+      var pathSegmentsToKeep = 1;
 
       var l = window.location;
       l.replace(
